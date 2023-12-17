@@ -1,0 +1,228 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import javax.swing.border.EmptyBorder;
+
+public class Main extends JFrame {
+    private static final Color BACKGROUND_COLOR = Color.WHITE;
+    private JPanel contentPane;
+    private RecommendationPanel recommendationPanel;
+    private LowerPanel lowerPanel;
+    private JButton buy;
+    private JButton shopee;
+    private JButton lazada;
+    //private Payment2 paymentFrame;
+
+
+    public Main(String separatorLabelText, String[] imagePaths) {
+        initUI(separatorLabelText, imagePaths);
+        setLocationRelativeTo(null);
+    }
+
+    private void initUI(String separatorLabelText, String[] imagePaths) {
+        getContentPane().setBackground(BACKGROUND_COLOR);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);  // Maximize the frame
+        contentPane = new JPanel();
+        contentPane.setLayout(new BorderLayout());
+        setContentPane(contentPane);
+
+        recommendationPanel = new RecommendationPanel();
+        lowerPanel = new LowerPanel(imagePaths);
+        contentPane.add(recommendationPanel, BorderLayout.NORTH);
+        JScrollPane scrollPane = new JScrollPane(lowerPanel);
+
+        MouseWheelListener[] listeners = scrollPane.getMouseWheelListeners();
+        for (MouseWheelListener listener : listeners) {
+            scrollPane.removeMouseWheelListener(listener);
+            scrollPane.addMouseWheelListener(new CustomMouseWheelListener(listener));
+        }
+
+        contentPane.add(scrollPane, BorderLayout.CENTER);
+
+        buy = new JButton("BUY NOW");
+        buy.setBackground(new Color(45, 44, 17));
+        buy.setForeground(new Color(255, 255, 255));
+        buy.setBorder(new EmptyBorder(20, 50, 20, 50));
+        //paymentFrame = new Payment2();
+
+       /* buy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                paymentFrame.getFrame().setVisible(true);
+            }
+        });*/
+
+        shopee = createSmallImageButton("C:/Users/sheka/Downloads/shopee.png");
+        lazada = createSmallImageButton("C:/Users/sheka/Downloads/lazada.png");
+
+        FooterPanel footerPanel = new FooterPanel();
+        footerPanel.add(Box.createHorizontalGlue());
+        footerPanel.add(buy);
+        footerPanel.add(lazada);
+        footerPanel.add(shopee);
+        contentPane.add(footerPanel, BorderLayout.SOUTH);
+
+
+        recommendationPanel.setSeparatorLabelText(separatorLabelText);
+    }
+
+    private JButton createSmallImageButton(String imagePath) {
+        ImageIcon originalIcon = new ImageIcon(imagePath);
+
+        int width = 55;
+        int height = 55;
+        Image resizedImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        ImageIcon smallIcon = new ImageIcon(resizedImage);
+
+        JButton button = new JButton(smallIcon);
+        button.setPreferredSize(new Dimension(width, height));
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(Main.this, "Small Image Button Clicked!");
+            }
+        });
+
+        return button;
+    }
+
+    private class CustomMouseWheelListener implements MouseWheelListener {
+        private final MouseWheelListener delegate;
+
+        public CustomMouseWheelListener(MouseWheelListener delegate) {
+            this.delegate = delegate;
+        }
+
+        @SuppressWarnings("deprecation")
+        @Override
+        public void mouseWheelMoved(MouseWheelEvent e) {
+            e = new MouseWheelEvent(
+                    e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(),
+                    e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(),
+                    e.getScrollType(), e.getScrollAmount() * 15, e.getWheelRotation());
+            delegate.mouseWheelMoved(e);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            //1st Frame
+            Main mainFrame1 = new Main("Round Shape\n For a round body shape, opt for long, shapely tunics in dark colors with an elongating V neckline to flatter the figure. Ensure a tailored fit that isn't too tight or shapeless, avoiding wide collars, ruffles, embellishments, and shiny fabrics. A straight cut or high-waisted fitted style in non-clinging materials like Lycra works well to create a streamlined and taller appearance.", new String[]{"C:/Users/sheka/Downloads/test2.jpg", "C:/Users/sheka/Downloads/test.jpg", "C:/Users/sheka/Downloads/test2.jpg", "C:/Users/sheka/Downloads/test2.jpg", "C:/Users/sheka/Downloads/test2.jpg", "C:/Users/sheka/Downloads/test2.jpg"});
+
+            mainFrame1.setTitle("Main Frame 1");
+            mainFrame1.setSize(new Dimension(800, 600));
+            mainFrame1.setVisible(true);
+
+            //2nd Frame
+            Main mainFrame2 = new Main("Triangle Shape\n \n" +
+                    "Highlight your upper body with embellishments like embroidery, patches, and frills to draw attention, creating a slender and adorned look. Use vertical lines on the lower part of your body to elongate it, avoiding horizontal lines. Opt for darker colors on the lower half for a slimming effect and consider wearing tall boots or stilettos to lengthen the appearance of your legs.", new String[]{"C:/Users/sheka/Downloads/test2.jpg", "C:/Users/sheka/Downloads/test.jpg", "C:/Users/sheka/Downloads/test2.jpg"});
+
+            mainFrame2.setTitle("Main Frame 2");
+            mainFrame2.setSize(new Dimension(800, 600));
+            mainFrame2.setVisible(true);
+
+            //3rd Frame
+            Main mainFrame3 = new Main("Hour Glass Shape\n\n This figure has a balanced figure and can carry almost all styles. But a well-fitted style with soft flowing lines will suit this body type the best. Tops in light colors with darker belts work well in accentuating the waist. Avoid loose-fitting dresses like loose tunics without any shape. Tops with an empire line waist are a good choice. ", new String[]{"C:/Users/sheka/Downloads/test2.jpg", "C:/Users/sheka/Downloads/test.jpg", "C:/Users/sheka/Downloads/test2.jpg"});
+
+            mainFrame3.setTitle("Main Frame 3");
+            mainFrame3.setSize(new Dimension(800, 600));
+            mainFrame3.setVisible(true);
+
+            //4th frame
+            Main mainFrame4 = new Main("Rectangle Shape", new String[]{"C:/Users/sheka/Downloads/test2.jpg", "C:/Users/sheka/Downloads/test.jpg", "C:/Users/sheka/Downloads/test2.jpg"});
+
+            mainFrame4.setTitle("Main Frame 4");
+            mainFrame4.setSize(new Dimension(800, 600));
+            mainFrame4.setVisible(true);
+
+            //5th Frame
+            Main mainFrame5 = new Main("Inverted Triangle Shape", new String[]{"C:/Users/sheka/Downloads/test2.jpg", "C:/Users/sheka/Downloads/test.jpg", "C:/Users/sheka/Downloads/test2.jpg"});
+
+            mainFrame5.setTitle("Main Frame 5");
+            mainFrame5.setSize(new Dimension(800, 600));
+            mainFrame5.setVisible(true);
+        });
+    }
+
+    private class RecommendationPanel extends JPanel {
+        private JLabel separatorLabel;
+
+        public RecommendationPanel() {
+            initUI();
+        }
+
+        private void initUI() {
+            setBorder(new EmptyBorder(40, 50, 20, 50));
+
+            JLabel label = new JLabel("RECOMMENDATION");
+            label.setBorder(new EmptyBorder(20, 0, 50, 0));
+            label.setFont(new Font("Tahoma", Font.PLAIN, 40));
+            label.setHorizontalAlignment(SwingConstants.LEFT);
+
+            JPanel separatorPanel = new JPanel();
+            separatorPanel.setLayout(new BorderLayout());
+
+            separatorLabel = new JLabel();
+            separatorLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+            separatorLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+            separatorPanel.add(separatorLabel, BorderLayout.CENTER);
+            separatorPanel.setPreferredSize(new Dimension(1, 200));
+            separatorPanel.setBackground(new Color(0xE6E6E6));
+
+            setLayout(new BorderLayout());
+            add(label, BorderLayout.NORTH);
+            add(separatorPanel, BorderLayout.CENTER);
+        }
+
+        public void setSeparatorLabelText(String text) {
+            separatorLabel.setText(text);
+        }
+    }
+
+    private class LowerPanel extends JPanel {
+        public LowerPanel(String[] imagePaths) {
+            initUI(imagePaths);
+        }
+
+        private void initUI(String[] imagePaths) {
+            setLayout(new GridLayout(3, 3, 10, 10));
+            setBorder(new EmptyBorder(40, 50, 20, 50));
+            setDoubleBuffered(true);
+
+            Dimension panelSize = new Dimension(200, 326);
+
+            for (int i = 0; i < imagePaths.length; i++) {
+                JPanel smallBox = new JPanel();
+                smallBox.setPreferredSize(panelSize);
+                add(smallBox);
+
+                JLabel imageLabel = new JLabel();
+                ImageIcon icon = new ImageIcon(imagePaths[i]);
+
+                int labelWidth = 350;
+                int labelHeight = 250;
+                imageLabel.setPreferredSize(new Dimension(labelWidth, labelHeight));
+
+                imageLabel.setIcon(new ImageIcon(icon.getImage().getScaledInstance(labelWidth, labelHeight, Image.SCALE_SMOOTH)));
+                smallBox.add(imageLabel);
+            }
+        }
+    }
+
+    private class FooterPanel extends JPanel {
+        public FooterPanel() {
+            initUI();
+        }
+
+        private void initUI() {
+            setLayout(new FlowLayout(FlowLayout.RIGHT));
+            setBorder(new EmptyBorder(5, 50, 5, 50));
+        }
+    }
+}
